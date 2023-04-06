@@ -32,6 +32,20 @@ exports.findAll = async (req, res) => {
 
   });
 };
+//find all the blogs with title 
+exports.findAllByTitle = async (req, res) => {
+  // const blog = await BlogModel.find();
+    const title = req.query.title;
+    const condition = title?{title:{$regex:new RegExp(title), $options:"i"}}:{}
+  BlogModel.find(condition).then((data) => {
+    res.send({ message: "Blogs data", blogs: data });
+  }).catch(err=>{
+    console.log('Error in fetching data',err);
+    res.status(400).send({ message: `Error in fetching  blog ${err}` });
+
+  });
+};
+
 
 
 //find one base on id
@@ -69,7 +83,7 @@ exports.update = (req,res)=>{
 }
 
 //delete
-exports.update = (req,res)=>{
+exports.delete = (req,res)=>{
     const id = req.params.id;
     BlogModel.findByIdAndRemove(id)
     .then(data=>{
